@@ -151,7 +151,7 @@ public class ConsumerTest extends TestBase {
     public void shouldConsumeNoMessagesFromEmptyBroker() {
         // when
         broker.setBatch();
-        var offsets = consumer.getOffsets();
+        var offsets = Map.copyOf(consumer.getOffsets());
         var consumed = consumer.consume(2, TOPIC_HOUSE);
         // then
         softly.assertThat(consumed)
@@ -172,7 +172,7 @@ public class ConsumerTest extends TestBase {
     public void shouldConsumeNoMessagesFromEmptyTopic() {
         // when
         broker.setBatch();
-        var offsets = consumer.getOffsets();
+        var offsets = Map.copyOf(consumer.getOffsets());
         var consumed = consumer.consume(2, TOPIC_HOUSE);
         // then
         softly.assertThat(consumed)

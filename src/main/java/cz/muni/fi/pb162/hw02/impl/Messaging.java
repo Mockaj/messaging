@@ -6,6 +6,9 @@ import cz.muni.fi.pb162.hw02.mesaging.client.Producer;
 
 public final class Messaging {
 
+    /**
+     * private Messaging constructor
+     */
     private Messaging() {
         // intentionally made private
     }

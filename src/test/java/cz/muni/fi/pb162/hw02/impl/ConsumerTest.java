@@ -47,7 +47,11 @@ public class ConsumerTest extends TestBase {
         // given
         var offsets = consumer.getOffsets();
         // when
-        offsets.put("cheeseCount", Long.MAX_VALUE);
+        try {
+            offsets.put("cheeseCount", Long.MAX_VALUE);
+        } catch (Exception e) {
+            // ignore
+        }
         // then
         softly.assertThat(consumer.getOffsets())
                 .describedAs("Consumer offsets")

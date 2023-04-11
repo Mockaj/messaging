@@ -249,7 +249,7 @@ public class ConsumerTest extends TestBase {
         broker.setBatch(
                 msg(3L, TOPIC_GARDEN, Map.of())
         );
-        offsets = consumer.getOffsets();
+        offsets = Map.copyOf(consumer.getOffsets());
         consumed = consumer.consume(1, TOPIC_GARDEN, TOPIC_HOUSE);
         // then
         softly.assertThat(consumed)

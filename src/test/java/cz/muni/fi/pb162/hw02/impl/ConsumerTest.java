@@ -43,10 +43,22 @@ public class ConsumerTest extends TestBase {
 
 
     @Test
+    public void shouldHaveSecureOffsets() {
+        // given
+        var offsets = consumer.getOffsets();
+        // when
+        offsets.put("cheeseCount", Long.MAX_VALUE);
+        // then
+        softly.assertThat(consumer.getOffsets())
+                .describedAs("Consumer offsets")
+                .isEmpty();
+    }
+
+    @Test
     public void shouldConsumeNothingFromEmptyBroker() {
         // when
         var consumed = consumer.consume(3, "house");
-        // when
+        // then
         softly.assertThat(consumed)
                 .describedAs("Messages from empty broker")
                 .isEmpty();
@@ -182,7 +194,7 @@ public class ConsumerTest extends TestBase {
     public void shouldConsumeSingleMessageFromTopic() {
         // when
         broker.setBatch(msg(1L, TOPIC_GARDEN, Map.of()));
-        var offsets = consumer.getOffsets();
+        var offsets = Map.copyOf(consumer.getOffsets());
         var consumed = consumer.consume(1, TOPIC_GARDEN);
         // then
         softly.assertThat(consumed)
@@ -211,7 +223,7 @@ public class ConsumerTest extends TestBase {
                 msg(11L, TOPIC_HOUSE, Map.of())
 
         );
-        var offsets = consumer.getOffsets();
+        var offsets = Map.copyOf(consumer.getOffsets());
         var consumed = consumer.consume(2, TOPIC_HOUSE, TOPIC_GARDEN);
         // then
         softly.assertThat(consumed)

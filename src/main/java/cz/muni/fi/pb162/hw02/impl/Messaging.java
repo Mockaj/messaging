@@ -19,7 +19,7 @@ public final class Messaging {
      * @return broker instance
      */
     public static Broker broker() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new BrokerFactory();
     }
 
     /**

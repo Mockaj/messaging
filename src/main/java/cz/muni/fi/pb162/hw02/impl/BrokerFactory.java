@@ -4,21 +4,24 @@ import cz.muni.fi.pb162.hw02.mesaging.broker.Broker;
 import cz.muni.fi.pb162.hw02.mesaging.broker.Message;
 
 import java.util.Collection;
+import java.util.Comparator;
+//import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.HashMap;
-import java.util.HashSet;
+//import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * @author Ladislav Husty
  */
 public class BrokerFactory implements Broker {
 
-    private final Map<String, Stack<Message>> database;
-    private static long messagesCounter = 0;
+    private final Map<String, LinkedList<Message>> database;
 
+    private static long messagesCounter = 0;
     /**
      * Constructor for broker
      */
@@ -32,44 +35,54 @@ public class BrokerFactory implements Broker {
 
     @Override
     public Collection<Message> push(Collection<Message> messages) {
-        Stack<Message> populatedMessages = new Stack<>();
-        for (Message messageProducer : messages) {
-            messagesCounter = messagesCounter + 1;
-            Message messageBroker = new MessageFactory(messageProducer.topics(),
-                    messageProducer.data(),
-                    messagesCounter);
-            populatedMessages.push(messageBroker);
-            Set<String> topics = messageBroker.topics();
+        LinkedList<Message> populatedMessages = new LinkedList<>();
+        for (Message message : messages) {
+            messagesCounter++;
+            Message newMessage = new MessageFactory(message, messagesCounter); // create a new message with a new ID
+            populatedMessages.push(newMessage);
+            Set<String> topics = message.topics();
             for (String topic: topics) {
-                Stack<Message> messagesStack;
+                LinkedList<Message> messagesLinkedList;
                 if (database.containsKey(topic)) {
-                    messagesStack = database.get(topic);
+                    messagesLinkedList = database.get(topic);
                 } else{
-                    messagesStack = new Stack<>();
+                    messagesLinkedList = new LinkedList<>();
                 }
-                messagesStack.push(messageBroker);
-                database.put(topic, messagesStack);
+                messagesLinkedList.push(newMessage); // add the new message object to the messagesLinkedList
+                messagesLinkedList.sort(Comparator.comparingLong(Message::id)); // sort messages by ID
+                database.put(topic, messagesLinkedList);
             }
         }
         return populatedMessages;
     }
 
+
+
+
+
+
+
     @Override
     public Collection<Message> poll(Map<String, Long> offsets, int num, Collection<String> topics) {
-        Set<Message> result = new HashSet<>();
-
+        Set<Message> result = new LinkedHashSet<>();
         for (String topic : topics) {
-            long lastReadId = offsets.getOrDefault(topic, 0L); // default to 0 if not found
-            Stack<Message> messagesStack = database.get(topic);
+            long lastReadId;
+            if (offsets.get(topic) == null){
+                lastReadId = 0;
+            } else{
+                lastReadId = offsets.get(topic);
+            }
 
-            if (messagesStack != null) {
-                Iterator<Message> messageIterator = messagesStack.iterator();
+            LinkedList<Message> messagesLinkedList = database.get(topic);
+
+            if (messagesLinkedList != null) {
+                Iterator<Message> messageIterator = messagesLinkedList.iterator();
                 int count = 0;
 
                 while (messageIterator.hasNext() && count < num) {
                     Message message = messageIterator.next();
 
-                    if (message.id() <= lastReadId) {
+                    if ( message.id() == null || message.id() <= lastReadId) {
                         // Message has already been read, skip it
                         continue;
                     }
@@ -86,7 +99,7 @@ public class BrokerFactory implements Broker {
      * @return map
      */
     // DONT FORGET TO DELETE THIS
-    public Map<String, Stack<Message>> getDatabase() {
+    public Map<String, LinkedList<Message>> getDatabase() {
         return this.database;
     }
 

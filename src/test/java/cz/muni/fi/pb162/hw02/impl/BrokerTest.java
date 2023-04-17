@@ -55,6 +55,7 @@ public class BrokerTest extends TestBase {
                 .describedAs("Returned messages with same topics and data stored by broker")
                 .hasSize(2);
         softly.assertThat(batch.stream().map(Message::id).collect(toSet()))
+
                 .describedAs("IDs of messages with same topics and data stored by broker")
                 .hasSize(2);
         softly.assertThat(batch.stream().map(Message::data).toList())

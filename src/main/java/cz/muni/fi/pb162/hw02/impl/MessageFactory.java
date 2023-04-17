@@ -10,20 +10,19 @@ import java.util.Set;
  */
 public class MessageFactory implements Message {
 
-    private final long id;
+    private long id;
     private final Set<String> topics;
-    private Map<String, Object> data;
+    private final Map<String, Object> data;
 
     /**
-     * Constructor for Broker
-     * @param topics
-     * @param data
+     *
+     * @param message
      * @param id
      */
-    public MessageFactory(Set<String> topics, Map<String, Object> data, long id){
+    public MessageFactory(Message message, long id){
         this.id = id;
-        this.topics = topics;
-        this.data = data;
+        this.topics = message.topics();
+        this.data = message.data();
     }
 
     /**
@@ -32,7 +31,9 @@ public class MessageFactory implements Message {
      * @param data
      */
     public MessageFactory(Set<String> topics, Map<String, Object> data) {
-        this(topics, data, -1);
+        this.id = -1;
+        this.topics = topics;
+        this.data = data;
     }
 
     @Override
@@ -48,5 +49,9 @@ public class MessageFactory implements Message {
     @Override
     public Map<String, Object> data() {
         return this.data;
+    }
+
+    public void setId(long id){
+        this.id = id;
     }
 }

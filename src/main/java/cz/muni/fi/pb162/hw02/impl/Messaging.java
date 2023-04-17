@@ -29,7 +29,7 @@ public final class Messaging {
      * @return client instance
      */
     public static Producer producer(Broker broker) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new ProducerFactory(broker);
     }
 
     /**
@@ -39,6 +39,7 @@ public final class Messaging {
      * @return client instance
      */
     public static Consumer consumer(Broker broker) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new ConsumerFactory(broker);
+
     }
 }

@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-//import java.util.stream.Collectors;
 
 /**
  * @author Ladislav Husty
@@ -33,7 +32,7 @@ public class ConsumerFactory implements Consumer {
     }
 
     @Override
-    public Broker getBroker() {
+    public Broker broker() {
         return new BrokerFactory();
     }
 
@@ -91,19 +90,6 @@ public class ConsumerFactory implements Consumer {
         this.offsets.clear();
         this.offsets.putAll(offsets);
     }
-
-//    private  Map<String, Long> getInitialOffsets(){
-//        Map<String, Long> initialOffsets = new HashMap<>();
-//        for (String topic: listTopics()){
-//            LinkedList<Message> firstUnreadMessage = (LinkedList<Message>) broker.poll(
-//                    Map.of(),
-//                    1,
-//                    Collections.singleton(topic));
-//            initialOffsets.put(topic, firstUnreadMessage.getFirst().id());
-//        }
-//        return initialOffsets;
-//    }
-
     @Override
     public void clearOffsets() {
         this.offsets.clear();

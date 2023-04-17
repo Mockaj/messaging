@@ -14,7 +14,7 @@ public record ProducerFactory(Broker broker) implements Producer {
     /**
      * Constructor for ProducerFactory
      *
-     * @param broker
+     * @param broker instance of Broker created by BrokerFactory
      */
     public ProducerFactory {
     }

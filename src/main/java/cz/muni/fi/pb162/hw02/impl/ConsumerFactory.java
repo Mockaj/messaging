@@ -20,11 +20,11 @@ import java.util.stream.Collectors;
  */
 public class ConsumerFactory implements Consumer {
     private final Broker broker;
-    private Map<String, Long> offsets;
+    private final Map<String, Long> offsets;
 
     /**
      * Constructor for ConsumerFactory
-     * @param broker
+     * @param broker instance of Broker created by BrokerFactory
      */
     public ConsumerFactory(Broker broker) {
         this.broker = broker;

@@ -6,7 +6,6 @@ import cz.muni.fi.pb162.hw02.mesaging.client.Consumer;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -50,9 +49,6 @@ public class ConsumerFactory implements Consumer {
                     num,
                     Collections.singleton(topic));
             LinkedList<Message> messagesLinkedList = new LinkedList<>(messagesSingleTopic);
-            // This should not be needed if broker.poll() functioned correctly,
-            // this is a good spot for possible refactorization
-            messagesLinkedList.sort(Comparator.comparingLong(Message::id));
             // So I filter those unwanted messages out
             LinkedList<Message> filteredMessages = messagesLinkedList.stream()
                     .filter(m -> m.topics().contains(topic))

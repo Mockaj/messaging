@@ -1,9 +1,9 @@
 package cz.muni.fi.pb162.hw02.impl;
 
 import cz.muni.fi.pb162.hw02.mesaging.broker.Message;
+
 import java.util.Map;
 import java.util.Set;
-
 
 /**
  * @author Ladislav Husty
@@ -15,18 +15,20 @@ public class MessageFactory implements Message {
     private final Map<String, Object> data;
 
     /**
-     *
      * @param message
      * @param id
      */
-    public MessageFactory(Message message, long id){
+    public MessageFactory(Message message, long id) {
         this.id = id;
         this.topics = message.topics();
         this.data = message.data();
     }
 
     /**
-     * Constructor for Producer
+     * Constructor for creating Message from scratch
+     * not needed in this code, but I find it essential
+     * if someone else wanted to "use this code"
+     *
      * @param topics
      * @param data
      */
@@ -51,7 +53,7 @@ public class MessageFactory implements Message {
         return this.data;
     }
 
-    public void setId(long id){
+    public void setId(long id) {
         this.id = id;
     }
 }

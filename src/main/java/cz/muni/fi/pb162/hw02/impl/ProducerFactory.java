@@ -3,22 +3,15 @@ package cz.muni.fi.pb162.hw02.impl;
 import cz.muni.fi.pb162.hw02.mesaging.broker.Broker;
 import cz.muni.fi.pb162.hw02.mesaging.broker.Message;
 import cz.muni.fi.pb162.hw02.mesaging.client.Producer;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- * @author Ladislav Husty
  * @param broker
+ * @author Ladislav Husty
  */
 public record ProducerFactory(Broker broker) implements Producer {
-    /**
-     * Constructor for ProducerFactory
-     *
-     * @param broker instance of Broker created by BrokerFactory
-     */
-    public ProducerFactory {
-    }
-
     @Override
     public Broker broker() {
         return new BrokerFactory();

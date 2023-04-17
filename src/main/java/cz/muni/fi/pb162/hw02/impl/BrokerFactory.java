@@ -18,16 +18,19 @@ import java.util.Set;
 public class BrokerFactory implements Broker {
     private final Map<String, LinkedList<Message>> database;
     private static long messagesCounter = 0;
+
     /**
      * Constructor for broker
      */
-    public BrokerFactory(){
+    public BrokerFactory() {
         this.database = new HashMap<>();
     }
+
     @Override
     public Collection<String> listTopics() {
         return database.keySet();
     }
+
     @Override
     public Collection<Message> push(Collection<Message> messages) {
         LinkedList<Message> populatedMessages = new LinkedList<>();
@@ -36,11 +39,11 @@ public class BrokerFactory implements Broker {
             Message newMessage = new MessageFactory(message, messagesCounter); // create a new message with a new ID
             populatedMessages.push(newMessage);
             Set<String> topics = message.topics();
-            for (String topic: topics) {
+            for (String topic : topics) {
                 LinkedList<Message> messagesLinkedList;
                 if (database.containsKey(topic)) {
                     messagesLinkedList = database.get(topic);
-                } else{
+                } else {
                     messagesLinkedList = new LinkedList<>();
                 }
                 messagesLinkedList.push(newMessage); // add the new message object to the messagesLinkedList
@@ -50,14 +53,15 @@ public class BrokerFactory implements Broker {
         }
         return populatedMessages;
     }
+
     @Override
     public Collection<Message> poll(Map<String, Long> offsets, int num, Collection<String> topics) {
         Set<Message> result = new LinkedHashSet<>();
         for (String topic : topics) {
             long lastReadId;
-            if (offsets.get(topic) == null){
+            if (offsets.get(topic) == null) {
                 lastReadId = 0;
-            } else{
+            } else {
                 lastReadId = offsets.get(topic);
             }
             LinkedList<Message> messagesLinkedList = database.get(topic);
@@ -69,7 +73,7 @@ public class BrokerFactory implements Broker {
                 while (messageIterator.hasNext() && count < num) {
                     Message message = messageIterator.next();
 
-                    if ( message.id() == null || message.id() <= lastReadId) {
+                    if (message.id() == null || message.id() <= lastReadId) {
                         // Message has already been read, skip it
                         continue;
                     }

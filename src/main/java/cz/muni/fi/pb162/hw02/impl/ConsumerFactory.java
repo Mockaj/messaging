@@ -23,6 +23,7 @@ public class ConsumerFactory implements Consumer {
 
     /**
      * Constructor for ConsumerFactory
+     *
      * @param broker instance of Broker created by BrokerFactory
      */
     public ConsumerFactory(Broker broker) {
@@ -43,7 +44,7 @@ public class ConsumerFactory implements Consumer {
     @Override
     public Collection<Message> consume(int num, String... topics) {
         Map<String, Long> initialOffsets = Map.copyOf(getOffsets());
-        for (String topic: topics){
+        for (String topic : topics) {
             //This should be single topic messages, but it's not for some reason ¯\_(ツ)_/¯
             Collection<Message> messagesSingleTopic = broker.poll(offsets,
                     num,
@@ -53,18 +54,17 @@ public class ConsumerFactory implements Consumer {
             LinkedList<Message> filteredMessages = messagesLinkedList.stream()
                     .filter(m -> m.topics().contains(topic))
                     .collect(Collectors.toCollection(LinkedList::new));
-            if (filteredMessages.isEmpty()){
+            if (filteredMessages.isEmpty()) {
                 continue;
             }
-
             try {
                 // Absolutely no idea why this fails for num = 0
-                this.offsets.put(topic, filteredMessages.get(num-1).id());
-            } catch (IndexOutOfBoundsException e){
+                this.offsets.put(topic, filteredMessages.get(num - 1).id());
+            } catch (IndexOutOfBoundsException e) {
                 // This however works for num = 0 ¯\_(ツ)_/¯
-                    this.offsets.put(topic, filteredMessages.getLast().id());
-                }
+                this.offsets.put(topic, filteredMessages.getLast().id());
             }
+        }
         return broker.poll(initialOffsets, num, List.of(topics));
     }
 
@@ -93,6 +93,7 @@ public class ConsumerFactory implements Consumer {
         this.offsets.clear();
         this.offsets.putAll(offsets);
     }
+
     @Override
     public void clearOffsets() {
         this.offsets.clear();
@@ -106,6 +107,5 @@ public class ConsumerFactory implements Consumer {
             }
         }
     }
-
 }
 

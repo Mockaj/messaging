@@ -30,7 +30,6 @@ public class BrokerFactory implements Broker {
     public Collection<String> listTopics() {
         return database.keySet();
     }
-
     @Override
     public Collection<Message> push(Collection<Message> messages) {
         LinkedList<Message> populatedMessages = new LinkedList<>();
@@ -53,7 +52,6 @@ public class BrokerFactory implements Broker {
         }
         return populatedMessages;
     }
-
     @Override
     public Collection<Message> poll(Map<String, Long> offsets, int num, Collection<String> topics) {
         Set<Message> result = new LinkedHashSet<>();
@@ -64,13 +62,12 @@ public class BrokerFactory implements Broker {
             } else{
                 lastReadId = offsets.get(topic);
             }
-
             LinkedList<Message> messagesLinkedList = database.get(topic);
-
             if (messagesLinkedList != null) {
+                // Is iterator the preferred way to loop through a collection?
+                // Should I be using it everywhere instead of forEach loop?
                 Iterator<Message> messageIterator = messagesLinkedList.iterator();
                 int count = 0;
-
                 while (messageIterator.hasNext() && count < num) {
                     Message message = messageIterator.next();
 
@@ -85,5 +82,4 @@ public class BrokerFactory implements Broker {
         }
         return result;
     }
-
 }

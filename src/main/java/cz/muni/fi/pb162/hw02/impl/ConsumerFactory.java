@@ -45,20 +45,27 @@ public class ConsumerFactory implements Consumer {
     public Collection<Message> consume(int num, String... topics) {
         Map<String, Long> initialOffsets = Map.copyOf(getOffsets());
         for (String topic: topics){
+            //This should be single topic messages, but it's not for some reason ¯\_(ツ)_/¯
             Collection<Message> messagesSingleTopic = broker.poll(offsets,
                     num,
                     Collections.singleton(topic));
             LinkedList<Message> messagesLinkedList = new LinkedList<>(messagesSingleTopic);
+            // This should not be needed if broker.poll() functioned correctly,
+            // this is a good spot for possible refactorization
             messagesLinkedList.sort(Comparator.comparingLong(Message::id));
+            // So I filter those unwanted messages out
             LinkedList<Message> filteredMessages = messagesLinkedList.stream()
                     .filter(m -> m.topics().contains(topic))
                     .collect(Collectors.toCollection(LinkedList::new));
             if (filteredMessages.isEmpty()){
                 continue;
             }
+
             try {
+                // Absolutely no idea why this fails for num = 0
                 this.offsets.put(topic, filteredMessages.get(num-1).id());
             } catch (IndexOutOfBoundsException e){
+                // This however works for num = 0 ¯\_(ツ)_/¯
                     this.offsets.put(topic, filteredMessages.getLast().id());
                 }
             }

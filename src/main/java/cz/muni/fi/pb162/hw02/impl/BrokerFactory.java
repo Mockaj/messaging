@@ -16,9 +16,7 @@ import java.util.Set;
  * @author Ladislav Husty
  */
 public class BrokerFactory implements Broker {
-
     private final Map<String, LinkedList<Message>> database;
-
     private static long messagesCounter = 0;
     /**
      * Constructor for broker

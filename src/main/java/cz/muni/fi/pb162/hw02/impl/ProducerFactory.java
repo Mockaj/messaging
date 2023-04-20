@@ -13,7 +13,7 @@ import java.util.LinkedList;
  */
 public record ProducerFactory(Broker broker) implements Producer {
     @Override
-    public Broker broker() {
+    public Broker getBroker() {
         return new BrokerFactory();
     }
 

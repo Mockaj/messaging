@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * @author Ladislav Husty
  */
-public class MessageFactory implements Message {
+public class MessageGeneral implements Message {
 
     private long id;
     private final Set<String> topics;
@@ -18,7 +18,7 @@ public class MessageFactory implements Message {
      * @param message
      * @param id
      */
-    public MessageFactory(Message message, long id) {
+    public MessageGeneral(Message message, long id) {
         this.id = id;
         this.topics = message.topics();
         this.data = message.data();
@@ -32,7 +32,7 @@ public class MessageFactory implements Message {
      * @param topics
      * @param data
      */
-    public MessageFactory(Set<String> topics, Map<String, Object> data) {
+    public MessageGeneral(Set<String> topics, Map<String, Object> data) {
         this.id = -1;
         this.topics = topics;
         this.data = data;

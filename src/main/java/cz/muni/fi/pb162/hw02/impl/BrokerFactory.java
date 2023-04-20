@@ -4,11 +4,13 @@ import cz.muni.fi.pb162.hw02.mesaging.broker.Broker;
 import cz.muni.fi.pb162.hw02.mesaging.broker.Message;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,7 +18,7 @@ import java.util.Set;
  * @author Ladislav Husty
  */
 public class BrokerFactory implements Broker {
-    private final Map<String, LinkedList<Message>> database;
+    private final Map<String, List<Message>> database;
     private static long messagesCounter = 0;
 
     /**
@@ -28,7 +30,7 @@ public class BrokerFactory implements Broker {
 
     @Override
     public Collection<String> listTopics() {
-        return database.keySet();
+        return Collections.unmodifiableSet(database.keySet());
     }
 
     @Override
@@ -36,13 +38,13 @@ public class BrokerFactory implements Broker {
         LinkedList<Message> populatedMessages = new LinkedList<>();
         for (Message message : messages) {
             messagesCounter++;
-            Message newMessage = new MessageFactory(message, messagesCounter); // create a new message with a new ID
+            Message newMessage = new MessageGeneral(message, messagesCounter); // create a new message with a new ID
             populatedMessages.push(newMessage);
             Set<String> topics = message.topics();
             for (String topic : topics) {
                 LinkedList<Message> messagesLinkedList;
                 if (database.containsKey(topic)) {
-                    messagesLinkedList = database.get(topic);
+                    messagesLinkedList = (LinkedList<Message>) database.get(topic);
                 } else {
                     messagesLinkedList = new LinkedList<>();
                 }
@@ -64,7 +66,7 @@ public class BrokerFactory implements Broker {
             } else {
                 lastReadId = offsets.get(topic);
             }
-            LinkedList<Message> messagesLinkedList = database.get(topic);
+            LinkedList<Message> messagesLinkedList = (LinkedList<Message>) database.get(topic);
             if (messagesLinkedList != null) {
                 // Is iterator the preferred way to loop through a collection?
                 // Should I be using it everywhere instead of forEach loop?

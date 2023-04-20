@@ -32,7 +32,7 @@ public class ConsumerFactory implements Consumer {
     }
 
     @Override
-    public Broker broker() {
+    public Broker getBroker() {
         return new BrokerFactory();
     }
 

@@ -42,15 +42,15 @@ public class BrokerFactory implements Broker {
             populatedMessages.push(newMessage);
             Set<String> topics = message.topics();
             for (String topic : topics) {
-                LinkedList<Message> messagesLinkedList;
+                List<Message> messagesList;
                 if (database.containsKey(topic)) {
-                    messagesLinkedList = (LinkedList<Message>) database.get(topic);
+                    messagesList = database.get(topic);
                 } else {
-                    messagesLinkedList = new LinkedList<>();
+                    messagesList = new LinkedList<>();
                 }
-                messagesLinkedList.push(newMessage); // add the new message object to the messagesLinkedList
-                messagesLinkedList.sort(Comparator.comparingLong(Message::id)); // sort messages by ID
-                database.put(topic, messagesLinkedList);
+                messagesList.add(newMessage); // add the new message object to the messagesList
+                messagesList.sort(Comparator.comparingLong(Message::id)); // sort messages by ID
+                database.put(topic, messagesList);
             }
         }
         return populatedMessages;

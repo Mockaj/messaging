@@ -6,6 +6,9 @@ import cz.muni.fi.pb162.hw02.mesaging.client.Producer;
 
 public final class Messaging {
 
+    /**
+     * private Messaging constructor
+     */
     private Messaging() {
         // intentionally made private
     }
@@ -16,7 +19,7 @@ public final class Messaging {
      * @return broker instance
      */
     public static Broker broker() {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new BrokerFactory();
     }
 
     /**
@@ -26,7 +29,7 @@ public final class Messaging {
      * @return client instance
      */
     public static Producer producer(Broker broker) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new ProducerFactory(broker);
     }
 
     /**
@@ -36,6 +39,7 @@ public final class Messaging {
      * @return client instance
      */
     public static Consumer consumer(Broker broker) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new ConsumerFactory(broker);
+
     }
 }
